@@ -1,5 +1,9 @@
 <resources>
-    <string name="app_name">My First Test Application</string>
+    <string name="app_name">Reading Gyroscope Data</string>
     <string name="welcome_text">Welcome to PilatesCorrect!</string>
     <string name="start">Start</string>
+    <string name="placeholder">Text is generated on runtime</string>
+    <string name="label_gyroscope"> Gyroscope Data: %1$.2f </string>
+    <string name="error_no_sensor">No sensor found on device</string>
+
 </resources>
