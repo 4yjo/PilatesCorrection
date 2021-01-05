@@ -3,15 +3,16 @@ package com.example.myfirsttestapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.View;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+
 
 import java.util.List;
 
@@ -36,25 +37,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
-       /* List<Sensor> sensorList = mSensorManager.getSensorList(Sensor.TYPE_ALL); // and store in List
-
-        StringBuilder sensorText = new StringBuilder();
-
-        for (Sensor currentSensor : sensorList){
-            sensorText.append(currentSensor.getName()).append(System.getProperty("line.separator"));
-        }
-        //TextView sensorTextView = (TextView) findViewById(R.id.sensor_list);
-        //sensorTextView.setText(sensorText);
-
-        mGyroscopeText = (TextView) findViewById(R.id.label_gyroscope);
-
-        mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        String sensor_error = getResources().getString(R.string.error_no_sensor);
-
-        if (mGyroscope==null){
-            mGyroscopeText.setText(sensor_error);
-        }
-    }*/
+    public void showSensorList(View view){
+        Intent intent = new Intent (this, listSensors.class);
+        startActivity(intent);
+    }
 
     @Override
     protected void onStart() {
@@ -80,11 +66,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
-
     }
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
+
+
 }
