@@ -3,15 +3,15 @@ package com.example.myfirsttestapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+
 
 import java.util.List;
 
@@ -72,6 +72,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager.unregisterListener(this);
     }
 
+    public void showSensorList(){
+        Intent intent = new Intent (this, listSensors.class);
+        startActivity(intent);
+    }
+
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
     //int sensorType = sensorEvent.sensor.getType(); //only necessary if > 1 sensor used
@@ -80,11 +85,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
-
     }
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
+
+
 }

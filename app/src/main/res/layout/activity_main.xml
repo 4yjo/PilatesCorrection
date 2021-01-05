@@ -7,48 +7,15 @@
     android:layout_margin="16dp"
     tools:context=".MainActivity">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
-      <!--  <TextView
-            android:id="@+id/sensor_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/placeholder"/>-->
 
-        <TextView
-            android:id="@+id/label_gyroscope"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text = "@string/label_gyroscope"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"/>
-    </ScrollView>
-
-
-<!--    <TextView
-        android:id="@+id/textView"
+    <TextView
+        android:id="@+id/label_gyroscope"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/welcome_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="80dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="120dp"
+        android:text="@string/label_gyroscope"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="85dp"
-        android:layout_marginEnd="164dp"
-        android:layout_marginRight="164dp"
-        android:text="@string/start"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="parent"/> />-->
-
 </androidx.constraintlayout.widget.ConstraintLayout>
