@@ -35,10 +35,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         String sensor_error = getResources().getString(R.string.error_no_sensor);
         mOtherSensorText = (TextView) findViewById(R.id.label_otherSensor);
-        mOtherSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        mOtherSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
 
         if (mGyroscope == null){
             mGyroscopeText.setText(sensor_error);
+        }
+
+        if (mOtherSensor == null){
+            mOtherSensorText.setText(sensor_error);
         }
     }
 
@@ -71,15 +75,35 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         int sensorType = sensorEvent.sensor.getType(); //only necessary if > 1 sensor used
-        float currentValue = sensorEvent.values[0]; // 0 = X-Axis, 1 = Y-Axis, 2 = Z-Axis
+
         switch (sensorType) {
             case Sensor.TYPE_GYROSCOPE:
-                //float currentValue = sensorEvent.values[0];
-                mGyroscopeText.setText(getResources().getString(R.string.label_gyroscope, currentValue));
+                float currentValueX = sensorEvent.values[0]; // 0 = X-Axis, 1 = Y-Axis, 2 = Z-Axis
+                float currentValueY = sensorEvent.values[1];
+                float currentValueZ = sensorEvent.values[2];
+                mGyroscopeText.setText(getResources().getString(R.string.label_gyroscope,
+                        currentValueX, currentValueY, currentValueZ));
                 break;
 
-            case Sensor.TYPE_MAGNETIC_FIELD:
-                mOtherSensorText.setText(getResources().getString(R.string.label_otherSensor, currentValue));
+            case Sensor.TYPE_ROTATION_VECTOR:  //following https://code.tutsplus.com/tutorials/android-sensors-in-depth-proximity-and-gyroscope--cms-28084
+                float[] rotationMatrix = new float[16];
+                SensorManager.getRotationMatrixFromVector(rotationMatrix, sensorEvent.values);
+
+                //remap coordinate system for later conversion to orientations
+                // while remapping new z-axis coincides with y-axis of original system
+
+                float[] remappedRotationMatrix = new float[16];
+                mSensorManager.remapCoordinateSystem(rotationMatrix, mSensorManager.AXIS_X, mSensorManager.AXIS_Z, remappedRotationMatrix);
+
+                float[] orientations = new float[3];
+                mSensorManager.getOrientation(remappedRotationMatrix, orientations);
+
+                for (int i = 0; i <3; i++){
+                    orientations[i] = (float) (Math.toDegrees(orientations[i]));
+                }
+
+
+                mOtherSensorText.setText(getResources().getString(R.string.label_otherSensor, orientations[0], orientations[1], orientations[2]));
                 break;
         }
     }
