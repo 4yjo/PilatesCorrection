@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         int sensorType = sensorEvent.sensor.getType(); //only necessary if > 1 sensor used
-        float currentValue = sensorEvent.values[0];
+        float currentValue = sensorEvent.values[0]; // 0 = X-Axis, 1 = Y-Axis, 2 = Z-Axis
         switch (sensorType) {
             case Sensor.TYPE_GYROSCOPE:
                 //float currentValue = sensorEvent.values[0];
