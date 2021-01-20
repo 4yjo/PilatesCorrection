@@ -12,6 +12,7 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,6 +20,8 @@ import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
@@ -52,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mTiltRight = (Button) findViewById(R.id.button4);
         mVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
-
         if (mGyroscope == null){
             mGyroscopeText.setText(sensor_error);
         }
@@ -60,9 +62,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (mOtherSensor == null){
             mOtherSensorText.setText(sensor_error);
         }
+
+
+        // connect to Server using Async Task declared in class "connectToServer.java"
+        new connectToServer().execute();
     }
 
     public void showSensorList(View view){
+        Log.d("AAA", "Button pressed");
+        //called on Button Click show Sensors
         Intent intent = new Intent (this, listSensors.class);
         startActivity(intent);
     }
@@ -81,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             mSensorManager.registerListener(this, mOtherSensor, SensorManager.SENSOR_DELAY_NORMAL);
             mOtherSensorText = (TextView)findViewById(R.id.label_otherSensor);
         }
-
 
     }
 
