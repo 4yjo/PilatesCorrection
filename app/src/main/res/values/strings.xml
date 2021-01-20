@@ -4,8 +4,9 @@
     <string name="start">Start</string>
     <string name="placeholder">Text is generated on runtime</string>
     <string name="label_gyroscope"> Gyroscope Data: X: %1$.2f Y: %2$.2f Z: %3$.2f </string>
-    <string name="label_otherSensor"> Rotation Vector Data: X: %1$.2f Y: %2$.2f Z: %3$.2f</string>
+    <string name="label_otherSensor"> Accelerometer Data: X: %1$.2f Y: %2$.2f Z: %3$.2f</string>
     <string name="label_listSensorButton">Show Sensors</string>
     <string name="error_no_sensor">No sensor found on device</string>
+    <string name="X_Axis_Icon"> signifier for x-values</string>
 
 </resources>
