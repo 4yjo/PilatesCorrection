@@ -20,13 +20,13 @@ public class connectToServer extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        Log.d("AAA", "entered connectToServer");
+        Log.d("BBB", "entered connectToServer");
             try {
                 InetAddress address = InetAddress.getLocalHost();
-                Log.d("AAA", address.toString());
+                Log.d("BBB", address.toString());
             }
-            catch (UnknownHostException uhEx) {
-                Log.d("AAA", "unknown host exeption");
+            catch (UnknownHostException e) {
+                Log.d("BBB", "unknown host exception");
             }
             accessServer();
         return null;
@@ -36,6 +36,7 @@ public class connectToServer extends AsyncTask<Void, Void, Void> {
         Socket link = null;
         try {
             link = new Socket("192.168.0.200.", 12345); //important: put ip adress of server's host machine
+            Log.d("BBB", "successfully connected to socket");
             OutputStream out = link.getOutputStream();
             // byte[] data = ...
             //out.write(data);  //send data to server
@@ -45,8 +46,9 @@ public class connectToServer extends AsyncTask<Void, Void, Void> {
 
 
         }
-        catch(IOException ioEx){
-            ioEx.printStackTrace();
+        catch(IOException e){
+            e.printStackTrace();
+            Log.d("BBB", e.getMessage());
         }
     }
 }
