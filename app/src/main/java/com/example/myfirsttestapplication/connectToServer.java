@@ -1,5 +1,6 @@
 package com.example.myfirsttestapplication;
 
+import android.hardware.SensorEvent;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -42,6 +43,7 @@ public class connectToServer extends AsyncTask<Void, Void, Void> {
             //out.write(data);  //send data to server
             PrintWriter writer = new PrintWriter(out, true);
             writer.println("Hello Server");
+
             //TODO: put sensor data here instead
 
 
