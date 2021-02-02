@@ -134,12 +134,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 break;*/
 
             case Sensor.TYPE_ACCELEROMETER:
-                mOtherSensorText.setText(getResources().getString(R.string.label_gyroscope,
+                mOtherSensorText.setText(getResources().getString(R.string.label_otherSensor,
                         currentValueX, currentValueY, currentValueZ));
 
                 if (currentValueX  > 1.5) {
                     // TODO: test what value is good (maybe > 2?)
                     mTiltFront.setBackgroundColor(Color.GREEN);
+                    // TODO: check for Android API Level maybe in switch-case instead of Type Accelerometer, so it only has to be done once
                     mVibrator.vibrate(50);
 
                 }
