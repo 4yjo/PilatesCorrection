@@ -10,7 +10,26 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
 public class streamSensorData extends Service implements SensorEventListener {
+    /* this class takes sensor data from SensorEvents
+    and sends it to a server running in processing file server.pde
+    if Permission is denied, make sure Server is running >> using server.pde Processing file for game
+    also make sure permission INTERNET is granted in Android Manifest
+
+    more Info on sensor events: https://developer.android.com/reference/android/hardware/SensorEvent
+    the code is oriented on the following tutorial by Shane Conder & Lauren Darcey:
+     https://code.tutsplus.com/tutorials/android-barometer-logger-acquiring-sensor-data--mobile-10558
+     using Dataoutputstream as described in https://stackoverflow.com/questions/5680259/using-sockets-to-send-and-receive-data
+     */
+
+
     private SensorManager sensorManager = null;
     private Sensor sensor = null;
     public String data;
@@ -29,9 +48,44 @@ public class streamSensorData extends Service implements SensorEventListener {
         protected Void doInBackground(SensorEvent... events){
             SensorEvent event = events[0];
             Log.d("CCC", String.valueOf(event));
+
+
+            try {
+                InetAddress address = InetAddress.getLocalHost();
+                Log.d("BBB", address.toString());
+            }
+            catch (UnknownHostException e) {
+                Log.d("BBB", "unknown host exception");
+            }
+            accessServer(event);
+
+            return null;
+        }
+    }
+
+    private static void accessServer(SensorEvent event) {
+        Socket link = null;
+        try {
+            link = new Socket("192.168.0.200.", 12345); //important: put ip adress of server's host machine
+            Log.d("BBB", "successfully connected to socket");
+            OutputStream out = link.getOutputStream();
+            // byte[] data = ...
+            //out.write(data);  //send data to server
+            PrintWriter writer = new PrintWriter(out, true);
+            writer.println("Hello Server");
+
+            //TODO: put sensor data here instead
             float xValues = event.values[0];
             Log.d("CCC", Float.toString(xValues));
-            return null;
+            writer.println(Float.toString(xValues));
+
+
+
+
+        }
+        catch(IOException e){
+            e.printStackTrace();
+            Log.d("BBB", e.getMessage());
         }
     }
 
