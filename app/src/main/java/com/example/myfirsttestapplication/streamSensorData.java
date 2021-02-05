@@ -20,13 +20,13 @@ import java.net.UnknownHostException;
 public class streamSensorData extends Service implements SensorEventListener {
     /* this class takes sensor data from SensorEvents
     and sends it to a server running in processing file server.pde
-    if Permission is denied, make sure Server is running >> using server.pde Processing file for game
+    if Permission is denied, make sure Server is running
     also make sure permission INTERNET is granted in Android Manifest
 
-    more Info on sensor events: https://developer.android.com/reference/android/hardware/SensorEvent
-    the code is oriented on the following tutorial by Shane Conder & Lauren Darcey:
+     the code is oriented on the following tutorial by Shane Conder & Lauren Darcey:
      https://code.tutsplus.com/tutorials/android-barometer-logger-acquiring-sensor-data--mobile-10558
      using Dataoutputstream as described in https://stackoverflow.com/questions/5680259/using-sockets-to-send-and-receive-data
+     more Info on sensor events found here: https://developer.android.com/reference/android/hardware/SensorEvent
      */
 
 
@@ -51,7 +51,7 @@ public class streamSensorData extends Service implements SensorEventListener {
 
 
             try {
-                InetAddress address = InetAddress.getLocalHost();
+                InetAddress address =  InetAddress.getByName("192.168.0.200."); //checking for Laptop ip that runs processing server
                 Log.d("BBB", address.toString());
             }
             catch (UnknownHostException e) {
@@ -72,15 +72,17 @@ public class streamSensorData extends Service implements SensorEventListener {
             // byte[] data = ...
             //out.write(data);  //send data to server
             PrintWriter writer = new PrintWriter(out, true);
-            writer.println("Hello Server");
+            //writer.println("Hello Server"); to test connection
 
-            //TODO: put sensor data here instead
-            float xValues = event.values[0];
-            Log.d("CCC", Float.toString(xValues));
-            writer.println(Float.toString(xValues));
+            //send sensor data to server
+            //TODO: make it bytes instead of string?
+            byte xValues = (byte) event.values[0]; //checking for hollow back
+            byte yValues = (byte) event.values[1]; //checking if hip turns left/right
 
+            byte[] coord = {xValues,yValues};
 
-
+            //writer.println( xValues + ";" + yValues); //Sending X and Y values as String
+            writer.println(coord);
 
         }
         catch(IOException e){
