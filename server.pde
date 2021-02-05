@@ -11,12 +11,13 @@ Server myServer;
 int c; 
 //byte[] input;
 Client myClient; //Android App
+float xCoord;
 
 
 
 void setup(){
   size(400,400);
-  c = 0;
+   background(200);
    myServer = new Server(this, port); //processing.net has class "Server" to create ServerSockets
    
   //provide information about server state
@@ -36,7 +37,6 @@ void setup(){
 
 void serverEvent(Server someServer, Client someClient) {
   println("We have a new client: " + someClient.ip());
-  c = 255; 
  // input = someClient.readBytes();
  // println("Message received" + input);
 }
@@ -47,21 +47,40 @@ void draw(){
   //receive data from client (Android App)
  myClient = myServer.available();
  if (myClient != null){
-   println("reading string from client "+ myClient.readString());
+    println("reading string from client "+ myClient.readString());
+    println(myClient.readString());
+    //String[] dataArray = split(myClient.readString(), ';');
+    String sensordata = myClient.readString();
+     println("sensordata: " + sensordata);
+   //while (sensordata != null){ //checks if there is data from client
+   //println("ENTERED WHILE");
+   // xCoord = Float.valueOf(dataArray[0]);
+   
+   // AAH sensordata is always null >> check for exeptions return null 
+   //https://stackoverflow.com/questions/5714102/java-inputstream-nullpointerexception-with-inputstream
+   
+   
+  // xCoord = Float.valueOf(dataArray[0]);
+  // println("xCoord: " + xCoord);
+  //TODO: make float global and position circle
+   
+   //TODO: get floats from string
+   // like here: https://processing.org/tutorials/network/
+   // maybe read https://processing.org/tutorials/data/
+   
  }
+ else{
+  // println("No Client found");
+   //TODO: Buffer + show text "waiting for client to connect"
  
     //draw circle
     fill(200,0,200);
-    circle(width/2, height/2, 10);
-  
-    
-   //unpack data/slice substrings
-   //input = input.substring(0, input.indexOf("\n"));  // Only up to the newline
-   //data = int(split(input, ' '));  // Split values into an array
-   // Draw line using received coords
-   // stroke(0);
-   // line(data[0], data[1], data[2], data[3]); 
-   
+    //float turn = map(xCoord, -5,5, 0, width);
+    float turn = 200;
+   // println("circle Position: " + turn);
+    circle(turn, height/2, 50);
+
+}   
 }
   
 
