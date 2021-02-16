@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Reading Sensor Data</string>
     <string name="welcome_text">Track your Training</string>
-    <string name="instructions_text">This App sends position data\n to the funny Game!\n Ready? </string>
+    <string name="instructions_text">This App sends position data to the funny Game!\n Ready? </string>
     <string name="start">Let\'s go</string>
     <string name="placeholder">Text is generated on runtime</string>
     <string name="label_Accelerometer"> Accelerometer Data: X: %1$.2f Y: %2$.2f Z: %3$.2f</string>

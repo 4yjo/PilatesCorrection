@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE); //get Sensor Information from Phone
         String sensor_error = getResources().getString(R.string.error_no_sensor);
         mAccelerometerText = (TextView) findViewById(R.id.label_Accelerometer);
-       // mOtherSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         mVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
@@ -85,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         float currentValueZ = sensorEvent.values[2];
 
 
-            mAccelerometerText.setText(getResources().getString(R.string.label_otherSensor,
+            mAccelerometerText.setText(getResources().getString(R.string.label_Accelerometer,
                     currentValueX, currentValueY, currentValueZ));
 
             if (currentValueX > 1.5) {
