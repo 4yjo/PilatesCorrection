@@ -9,6 +9,7 @@ import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -86,7 +87,6 @@ public class streamSensorData extends Service implements SensorEventListener {
                 Log.d("BBB", "Found Server on ip " + address.toString());
             }
             catch (UnknownHostException e) {
-                //Todo toast error check ip address in settings
                 Log.d("BBB", "unknown host exception");
             }
 
