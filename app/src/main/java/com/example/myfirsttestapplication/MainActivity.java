@@ -1,6 +1,8 @@
 package com.example.myfirsttestapplication;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +14,8 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -30,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ActionBar actionBar = getSupportActionBar();
+
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE); //get Sensor Information from Phone
         String sensor_error = getResources().getString(R.string.error_no_sensor);
         mAccelerometerText = (TextView) findViewById(R.id.label_Accelerometer);
@@ -42,6 +48,29 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             mAccelerometerText.setText(sensor_error);
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        //creates Menu
+        getMenuInflater().inflate(R.menu.menu_items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){switch(item.getItemId()){
+        case R.id.settings:
+            //go to Settings page
+            Intent intent = new Intent(this, Settings.class);
+            startActivity(intent);
+            return(true);
+        case R.id.exit:
+            //close app
+            this.finishAffinity();
+        case R.id.about:
+            //go to About page
+        }
+        return(super.onOptionsItemSelected(item));
     }
 
     public void showSensorList(View view){
@@ -85,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
             mAccelerometerText.setText(getResources().getString(R.string.label_Accelerometer,
-                    currentValueX, currentValueY, currentValueZ));
+                    currentValueX, currentValueY));
 
             if (currentValueX > 1.5) {
                 // TODO: test what value is good (maybe > 2?)
