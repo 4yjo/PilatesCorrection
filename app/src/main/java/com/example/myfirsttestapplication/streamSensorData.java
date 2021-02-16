@@ -30,62 +30,76 @@ public class streamSensorData extends Service implements SensorEventListener {
      */
 
 
-    private SensorManager sensorManager = null;
-    private Sensor sensor = null;
     public String data;
+    private static final String serverIP = "192.168.0.200."; // defaults to IP Address of Laptop that runs server.pde
+                                                // may be changed by user in settings of the app
+    private static final int PORT = 12345;
 
-    public int onStartCommand(Intent intent, int flags, int startId ){
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+    public int onStartCommand(Intent intent, int flags, int startId){
+        // access accelerometer of device
+        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         return START_STICKY;
     }
 
 
-    private class SensorLogger extends AsyncTask<SensorEvent, Void, Void> {
+    private static class SensorLogger extends AsyncTask<SensorEvent, Void, Void> {
         @Override
         protected Void doInBackground(SensorEvent... events){
             SensorEvent event = events[0];
             Log.d("CCC", String.valueOf(event));
 
-
             try {
-                InetAddress address =  InetAddress.getByName("192.168.0.200."); //checking for Laptop ip that runs processing server
-                Log.d("BBB", address.toString());
+                InetAddress address =  InetAddress.getByName(serverIP);
+                Log.d("BBB", "connected to server with ip: " + address.toString());
             }
             catch (UnknownHostException e) {
+                //Todo toast error check ip adress in settings
                 Log.d("BBB", "unknown host exception");
             }
-            accessServer(event);
-
+            sendToServer(event);
             return null;
         }
     }
 
-    private static void accessServer(SensorEvent event) {
-        Socket link = null;
+    private static void sendToServer(SensorEvent event) {
+        //processes Data of Accelerometer as onStartCommand() registered a
+        //listener to the devices Accelerometer Sensor
+
+
+        //Accelerometer Data is send to processing file server.pde for visualisation
+        //therefore tcp connection is set up in the following:
+        //if connection breaks/cannot be established, exception is thrown and try again
+
+        Socket link;
         try {
-            link = new Socket("192.168.0.200.", 12345); //important: put ip adress of server's host machine
+            // create socket for connection with server; make sure port equals port in server.pde
+            //must be same as in server.pde; may be changed by user in settings of the app
+            link = new Socket(serverIP, PORT);
             Log.d("BBB", "successfully connected to socket");
+
+            //create outputstream from this socket
+            //this outputstream can then be read by server.pde on the specified port
             OutputStream out = link.getOutputStream();
-            // byte[] data = ...
-            //out.write(data);  //send data to server
+
+            //to write data to output stream, wrap it with PrintWriter
+            //the printwriter writer sends chunks of one line; uncomment command below to test
             PrintWriter writer = new PrintWriter(out, true);
-            //writer.println("Hello Server"); to test connection
+            // writer.println("Hello Server"); //to test connection
 
-            //send sensor data to server
-            //TODO: make it bytes instead of string?
-            byte xValues = (byte) event.values[0]; //checking for hollow back
-            byte yValues = (byte) event.values[1]; //checking if hip turns left/right
 
-            byte[] coord = {xValues,yValues};
+            //access sensor values from phone with SensorEvent
+            //accelerometer values hold float Array with current values for each Axis
+            float xValues = event.values[0]; //x-Axis to detect hollow back
+            float yValues = event.values[1]; //y-Axis to detect hips falling to one side
 
-            //writer.println( xValues + ";" + yValues); //Sending X and Y values as String
-            writer.println(coord);
-
+            //now flush those values to outputstream using the PrintWriter
+            writer.println( xValues + ";" + yValues);
         }
         catch(IOException e){
+            //throws exception if connection failed
             e.printStackTrace();
             Log.d("BBB", e.getMessage());
         }
