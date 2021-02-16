@@ -18,11 +18,12 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class streamSensorData extends Service implements SensorEventListener {
-    /* this class takes sensor data from SensorEvents
-    and sends it to a server running in processing file server.pde
-    if Permission is denied, make sure Server is running
+    /* Take sensor data from SensorEvents and send sensor data to a server in real time.
+    The server is running on a second device (laptop) in processing file named "server.pde"
+    If Permission is denied, make sure Server is running
     also make sure permission INTERNET is granted in Android Manifest
 
+     ----------------------------------------------------------------------------------------------
      the code is oriented on the following tutorial by Shane Conder & Lauren Darcey:
      https://code.tutsplus.com/tutorials/android-barometer-logger-acquiring-sensor-data--mobile-10558
      using Dataoutputstream as described in https://stackoverflow.com/questions/5680259/using-sockets-to-send-and-receive-data
@@ -33,7 +34,7 @@ public class streamSensorData extends Service implements SensorEventListener {
     private static final String serverIP = "192.168.0.200."; // defaults to IP Address of Laptop that runs server.pde
                                                 // may be changed by user in settings of the app
     private static final int PORT = 12345;
-    private static Socket link;
+    private static Socket link; //created in createConnection
 
 
     public int onStartCommand(Intent intent, int flags, int startId){
@@ -42,33 +43,58 @@ public class streamSensorData extends Service implements SensorEventListener {
         Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
+        new createConnection().execute();
+
         return START_STICKY;
     }
 
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
-    private static class SensorLogger extends AsyncTask<SensorEvent, Void, Void> {
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        // processes Data of Accelerometer as onStartCommand() registered a
+        // listener to the devices Accelerometer Sensor.
+        // When Accelerometer data changes write updated data into output stream
+        // (only works if connection is already created >> link !=null
+        if (link!=null) {
+            try {
+                sendToServer(sensorEvent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+        //do nothing
+    }
+
+
+    private static class createConnection extends AsyncTask<Void, Void, Void> {
+        /*set up a tcp socket and connect it to server (running as server.pde on laptop)*/
 
         @Override
-        protected Void doInBackground(SensorEvent... events){
-            SensorEvent event = events[0];
-            Log.d("CCC", String.valueOf(event));
+        protected Void doInBackground(Void... voids){
 
+            // first, see if IP Adress of laptop can be found
             try {
                 InetAddress address =  InetAddress.getByName(serverIP);
-                Log.d("BBB", "connected to server with ip: " + address.toString());
+                Log.d("BBB", "Found Server on ip " + address.toString());
             }
             catch (UnknownHostException e) {
-                //Todo toast error check ip adress in settings
+                //Todo toast error check ip address in settings
                 Log.d("BBB", "unknown host exception");
             }
 
+            // then, create socket that connects to this ip adsress
+            //(Port must be same as in server.pde; may be changed by user in settings of the app)
             try {
-                // create socket for connection with server; make sure port equals port in server.pde
-                //must be same as in server.pde; may be changed by user in settings of the app
                 link = new Socket(serverIP, PORT);
-                Log.d("BBB", "successfully connected to socket");
-
-                sendToServer(event);
+                Log.d("BBB", "successfully connected to server");
 
             }
             catch(IOException e){
@@ -82,27 +108,20 @@ public class streamSensorData extends Service implements SensorEventListener {
     }
 
     private static void sendToServer(SensorEvent event) throws IOException {
-        //processes Data of Accelerometer as onStartCommand() registered a
-        //listener to the devices Accelerometer Sensor
+        /*Accelerometer Data is send to processing file server.pde for visualisation*/
 
 
-        //Accelerometer Data is send to processing file server.pde for visualisation
-        //therefore tcp connection is set up in the following:
-        //if connection breaks/cannot be established, exception is thrown and try again
-
-
-
-        //create outputstream from this socket
+        //create outputstream from socket link
         //this outputstream can then be read by server.pde on the specified port
         OutputStream out = link.getOutputStream();
 
-        //to write data to output stream, wrap it with PrintWriter
+        //to write data to this output stream, wrap it with PrintWriter
         //the printwriter writer sends chunks of one line; uncomment command below to test
         PrintWriter writer = new PrintWriter(out, true);
         // writer.println("Hello Server"); //to test connection
 
 
-        //access sensor values from phone with SensorEvent
+        //access sensor values from phone with SensorEvent via onSensorChanged()
         //accelerometer values hold float Array with current values for each Axis
         //(more info on Accelerometer Coordinate System here:
         //https://developer.android.com/guide/topics/sensors/sensors_overview#sensors-coords)
@@ -110,22 +129,6 @@ public class streamSensorData extends Service implements SensorEventListener {
         float yValues = event.values[1]; //y-Axis to detect hips falling to one side
 
         //now flush those values to outputstream using the PrintWriter
-        writer.println( xValues + ";" + yValues);
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
-        // detect change in position and call SensorLogger for sensorEvent specified in OnStartCommand
-        new SensorLogger().execute(sensorEvent);
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-        //do nothing
-    }
+        writer.println(xValues + ";" + yValues);
+        }
 }

@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Object streamSensorData;
 
 
-    //onCreate send data all the time, also when app is not running in the foreground > better use onStart
+    //TODO: onCreate send data all the time, also when app is not running in the foreground > better use onStart
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
