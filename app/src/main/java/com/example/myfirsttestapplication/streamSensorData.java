@@ -30,7 +30,6 @@ public class streamSensorData extends Service implements SensorEventListener {
      */
 
 
-    public String data;
     private static final String serverIP = "192.168.0.200."; // defaults to IP Address of Laptop that runs server.pde
                                                 // may be changed by user in settings of the app
     private static final int PORT = 12345;
@@ -92,6 +91,8 @@ public class streamSensorData extends Service implements SensorEventListener {
 
             //access sensor values from phone with SensorEvent
             //accelerometer values hold float Array with current values for each Axis
+            //(more info on Accelerometer Coordinate System here:
+            //https://developer.android.com/guide/topics/sensors/sensors_overview#sensors-coords)
             float xValues = event.values[0]; //x-Axis to detect hollow back
             float yValues = event.values[1]; //y-Axis to detect hips falling to one side
 
@@ -112,17 +113,8 @@ public class streamSensorData extends Service implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        float currentValueX = sensorEvent.values[0]; // 0 = X-Axis, 1 = Y-Axis, 2 = Z-Axis
-        float currentValueY = sensorEvent.values[1];
-        float currentValueZ = sensorEvent.values[2];
-
-        data = Float.toString(currentValueX);
-
-
+        // detect change in position and call SensorLogger for sensorEvent specified in OnStartCommand
         new SensorLogger().execute(sensorEvent);
-        //TODO: Do the same for y, z
-
-
     }
 
     @Override
