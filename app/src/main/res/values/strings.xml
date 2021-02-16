@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Reading Sensor Data</string>
-    <string name="welcome_text">Welcome to PilatesCorrect!</string>
-    <string name="start">Start</string>
+    <string name="welcome_text">Track your Training</string>
+    <string name="instructions_text">This App sends position data\n to the funny Game!\n Ready? </string>
+    <string name="start">Let\'s go</string>
     <string name="placeholder">Text is generated on runtime</string>
-    <string name="label_gyroscope"> Gyroscope Data: X: %1$.2f Y: %2$.2f Z: %3$.2f </string>
-    <string name="label_otherSensor"> Accelerometer Data: X: %1$.2f Y: %2$.2f Z: %3$.2f</string>
+    <string name="label_Accelerometer"> Accelerometer Data: X: %1$.2f Y: %2$.2f Z: %3$.2f</string>
     <string name="label_listSensorButton">Show Sensors</string>
     <string name="error_no_sensor">No sensor found on device</string>
     <string name="X_Axis_Icon"> signifier for x-values</string>

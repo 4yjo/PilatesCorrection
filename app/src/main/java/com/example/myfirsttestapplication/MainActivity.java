@@ -9,34 +9,16 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
-
-
-import com.google.android.material.button.MaterialButtonToggleGroup;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     private SensorManager mSensorManager; //create instance of sensor manager system service following https://developer.android.com/codelabs/advanced-android-training-sensor-data#2
-    private Sensor mGyroscope;
-    private TextView mGyroscopeText;
-    private Sensor mOtherSensor;
-    private TextView mOtherSensorText;
-    private Button mTiltLeft;
-    private Button mTiltFront;
-    private Button mTiltRight;
+    private Sensor mAccelerometer;
+    private TextView mAccelerometerText;
     private Vibrator mVibrator;
     public String data;
     private Object streamSensorData;
@@ -49,28 +31,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE); //get Sensor Information from Phone
-        mGyroscopeText = (TextView) findViewById(R.id.label_gyroscope);
-        mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         String sensor_error = getResources().getString(R.string.error_no_sensor);
-        mOtherSensorText = (TextView) findViewById(R.id.label_otherSensor);
+        mAccelerometerText = (TextView) findViewById(R.id.label_Accelerometer);
        // mOtherSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-        mOtherSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mTiltLeft = (Button) findViewById(R.id.button2);
-        mTiltFront = (Button) findViewById(R.id.button3);
-        mTiltRight = (Button) findViewById(R.id.button4);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
         mVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
-        if (mGyroscope == null){
-            mGyroscopeText.setText(sensor_error);
+
+        if (mAccelerometer == null){
+            mAccelerometerText.setText(sensor_error);
         }
 
-        if (mOtherSensor == null){
-            mOtherSensorText.setText(sensor_error);
-        }
-
-        // connect to Server using Async Task declared in class "connectToServer.java"
-      // TODO: check
-        //  new connectToServer().execute();
     }
 
     public void showSensorList(View view){
@@ -80,25 +52,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         startActivity(intent);
     }
 
+    public void startSendingData(View view){
+        //create connection to server and send Accelerometer Data in real time
+        Intent intent = new Intent(getApplicationContext(), streamSensorData.class);
+        startService(intent);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
 
-        //call Sensor Events in stream sensor data
-        Intent intent = new Intent(getApplicationContext(), streamSensorData.class);
-        startService(intent);
-
-
         // register Listener for Accelerometer
-
-        if (mGyroscope != null){
-            mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
-            mGyroscopeText = (TextView)findViewById(R.id.label_gyroscope);
-        }
-
-        if (mOtherSensor != null){
-            mSensorManager.registerListener(this, mOtherSensor, SensorManager.SENSOR_DELAY_NORMAL);
-            mOtherSensorText = (TextView)findViewById(R.id.label_otherSensor);
+        if (mAccelerometer != null){
+            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+            mAccelerometerText = (TextView)findViewById(R.id.label_Accelerometer);
         }
     }
 
@@ -113,62 +80,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        int sensorType = sensorEvent.sensor.getType(); //only necessary if > 1 sensor used
-
         float currentValueX = sensorEvent.values[0]; // 0 = X-Axis, 1 = Y-Axis, 2 = Z-Axis
         float currentValueY = sensorEvent.values[1];
         float currentValueZ = sensorEvent.values[2];
 
-        switch (sensorType) {
-            case Sensor.TYPE_GYROSCOPE:
-                mGyroscopeText.setText(getResources().getString(R.string.label_gyroscope,
-                        currentValueX, currentValueY, currentValueZ));
-                data = Float.toString(sensorEvent.values[0]);
-                Log.d("ACCELEROMETER X: ", data);
-                break;
 
-          /*  case Sensor.TYPE_ROTATION_VECTOR:  //following https://code.tutsplus.com/tutorials/android-sensors-in-depth-proximity-and-gyroscope--cms-28084
-                float[] rotationMatrix = new float[16];
-                SensorManager.getRotationMatrixFromVector(rotationMatrix, sensorEvent.values);
+            mAccelerometerText.setText(getResources().getString(R.string.label_otherSensor,
+                    currentValueX, currentValueY, currentValueZ));
 
-                //remap coordinate system for later conversion to orientations
-                // while remapping new z-axis coincides with y-axis of original system
+            if (currentValueX > 1.5) {
+                // TODO: test what value is good (maybe > 2?)
 
-                float[] remappedRotationMatrix = new float[16];
-                mSensorManager.remapCoordinateSystem(rotationMatrix, mSensorManager.AXIS_X, mSensorManager.AXIS_Z, remappedRotationMatrix);
+                // TODO: check for Android API Level maybe in switch-case instead of Type Accelerometer, so it only has to be done once
+                mVibrator.vibrate(50);
 
-                float[] orientations = new float[3];
-                mSensorManager.getOrientation(remappedRotationMatrix, orientations);
+            } else if (currentValueX < -1.5) {
 
-                for (int i = 0; i <3; i++){
-                    orientations[i] = (float) (Math.toDegrees(orientations[i]));
-                }
-
-
-                mOtherSensorText.setText(getResources().getString(R.string.label_otherSensor, orientations[0], orientations[1], orientations[2]));
-                break;*/
-
-            case Sensor.TYPE_ACCELEROMETER:
-                mOtherSensorText.setText(getResources().getString(R.string.label_otherSensor,
-                        currentValueX, currentValueY, currentValueZ));
-
-                if (currentValueX > 1.5) {
-                    // TODO: test what value is good (maybe > 2?)
-                    mTiltFront.setBackgroundColor(Color.GREEN);
-                    // TODO: check for Android API Level maybe in switch-case instead of Type Accelerometer, so it only has to be done once
-                    mVibrator.vibrate(50);
-
-                } else if (currentValueX < -1.5) {
-                    mTiltFront.setBackgroundColor(Color.BLUE);
-                    mVibrator.vibrate(50);
-                } else {
-                    mTiltFront.setBackgroundColor(Color.YELLOW);
-                }
-
-                break;
-
-
-        }
+                mVibrator.vibrate(50);
+            } else {
+               // do not vibrate
+            }
     }
 
     @Override
