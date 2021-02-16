@@ -33,6 +33,8 @@ public class streamSensorData extends Service implements SensorEventListener {
     private static final String serverIP = "192.168.0.200."; // defaults to IP Address of Laptop that runs server.pde
                                                 // may be changed by user in settings of the app
     private static final int PORT = 12345;
+    private static Socket link;
+
 
     public int onStartCommand(Intent intent, int flags, int startId){
         // access accelerometer of device
@@ -45,6 +47,7 @@ public class streamSensorData extends Service implements SensorEventListener {
 
 
     private static class SensorLogger extends AsyncTask<SensorEvent, Void, Void> {
+
         @Override
         protected Void doInBackground(SensorEvent... events){
             SensorEvent event = events[0];
@@ -58,12 +61,27 @@ public class streamSensorData extends Service implements SensorEventListener {
                 //Todo toast error check ip adress in settings
                 Log.d("BBB", "unknown host exception");
             }
-            sendToServer(event);
+
+            try {
+                // create socket for connection with server; make sure port equals port in server.pde
+                //must be same as in server.pde; may be changed by user in settings of the app
+                link = new Socket(serverIP, PORT);
+                Log.d("BBB", "successfully connected to socket");
+
+                sendToServer(event);
+
+            }
+            catch(IOException e){
+                //throws exception if connection failed
+                e.printStackTrace();
+                Log.d("BBB", e.getMessage());
+            }
+
             return null;
         }
     }
 
-    private static void sendToServer(SensorEvent event) {
+    private static void sendToServer(SensorEvent event) throws IOException {
         //processes Data of Accelerometer as onStartCommand() registered a
         //listener to the devices Accelerometer Sensor
 
@@ -72,38 +90,27 @@ public class streamSensorData extends Service implements SensorEventListener {
         //therefore tcp connection is set up in the following:
         //if connection breaks/cannot be established, exception is thrown and try again
 
-        Socket link;
-        try {
-            // create socket for connection with server; make sure port equals port in server.pde
-            //must be same as in server.pde; may be changed by user in settings of the app
-            link = new Socket(serverIP, PORT);
-            Log.d("BBB", "successfully connected to socket");
-
-            //create outputstream from this socket
-            //this outputstream can then be read by server.pde on the specified port
-            OutputStream out = link.getOutputStream();
-
-            //to write data to output stream, wrap it with PrintWriter
-            //the printwriter writer sends chunks of one line; uncomment command below to test
-            PrintWriter writer = new PrintWriter(out, true);
-            // writer.println("Hello Server"); //to test connection
 
 
-            //access sensor values from phone with SensorEvent
-            //accelerometer values hold float Array with current values for each Axis
-            //(more info on Accelerometer Coordinate System here:
-            //https://developer.android.com/guide/topics/sensors/sensors_overview#sensors-coords)
-            float xValues = event.values[0]; //x-Axis to detect hollow back
-            float yValues = event.values[1]; //y-Axis to detect hips falling to one side
+        //create outputstream from this socket
+        //this outputstream can then be read by server.pde on the specified port
+        OutputStream out = link.getOutputStream();
 
-            //now flush those values to outputstream using the PrintWriter
-            writer.println( xValues + ";" + yValues);
-        }
-        catch(IOException e){
-            //throws exception if connection failed
-            e.printStackTrace();
-            Log.d("BBB", e.getMessage());
-        }
+        //to write data to output stream, wrap it with PrintWriter
+        //the printwriter writer sends chunks of one line; uncomment command below to test
+        PrintWriter writer = new PrintWriter(out, true);
+        // writer.println("Hello Server"); //to test connection
+
+
+        //access sensor values from phone with SensorEvent
+        //accelerometer values hold float Array with current values for each Axis
+        //(more info on Accelerometer Coordinate System here:
+        //https://developer.android.com/guide/topics/sensors/sensors_overview#sensors-coords)
+        float xValues = event.values[0]; //x-Axis to detect hollow back
+        float yValues = event.values[1]; //y-Axis to detect hips falling to one side
+
+        //now flush those values to outputstream using the PrintWriter
+        writer.println( xValues + ";" + yValues);
     }
 
     @Override
