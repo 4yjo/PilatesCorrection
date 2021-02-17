@@ -44,4 +44,21 @@ public class Settings extends AppCompatActivity {
         return(super.onOptionsItemSelected(item));
     }
 
+
+    public void onClickMain(View view){
+        //create connection to server and send Accelerometer Data in real time
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startService(intent);
+    }
+
+
+    public void onClickAbout(View view){
+        //create connection to server and send Accelerometer Data in real time
+        Intent intent = new Intent(getApplicationContext(), About.class);
+        startService(intent);
+
+        //NavHostFragment.findNavController(SecondFragment.this)
+        //                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
+    }
+
 }

@@ -61,14 +61,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public boolean onOptionsItemSelected(MenuItem item){switch(item.getItemId()){
         case R.id.settings:
             //go to Settings page
-            Intent intent = new Intent(this, Settings.class);
-            startActivity(intent);
+            Intent intentSettings = new Intent(this, Settings.class);
+            startActivity(intentSettings);
             return(true);
         case R.id.exit:
             //close app
             this.finishAffinity();
         case R.id.about:
-            //go to About page
+            Intent intentAbout = new Intent(this, About.class);
+            startActivity(intentAbout);
         }
         return(super.onOptionsItemSelected(item));
     }
@@ -86,6 +87,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         startService(intent);
     }
 
+   /* public void onClickSettings(View view){
+        //create connection to server and send Accelerometer Data in real time
+        Intent intent = new Intent(getApplicationContext(), Settings.class);
+        startService(intent);
+    }
+
+
+    public void onClickAbout(View view){
+        //create connection to server and send Accelerometer Data in real time
+        Intent intent = new Intent(getApplicationContext(), About.class);
+        startService(intent);
+
+        //NavHostFragment.findNavController(SecondFragment.this)
+        //                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
+    }
+
+    */
     @Override
     protected void onStart() {
         super.onStart();
