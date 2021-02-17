@@ -17,15 +17,22 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
+
+import static com.example.myfirsttestapplication.Settings.EXTRA_TEXT;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     private SensorManager mSensorManager; //create instance of sensor manager system service following https://developer.android.com/codelabs/advanced-android-training-sensor-data#2
     private Sensor mAccelerometer;
     private TextView mAccelerometerText;
     private Vibrator mVibrator;
-    public String data;
-    private Object streamSensorData;
+
+    public static String serverIP = "192.168.0.200."; // defaults to IP Address of Laptop that runs server.pde
+                                                      // may be changed by user in settings of the app
+    public static int PORT = 12345;
 
 
     //TODO: onCreate send data all the time, also when app is not running in the foreground > better use onStart
@@ -35,6 +42,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ActionBar actionBar = getSupportActionBar();
+
+        Intent intent = getIntent();
+        serverIP = intent.getStringExtra(EXTRA_TEXT);
+
+        TextView showIP = (TextView) findViewById(R.id.showIP);
+        showIP.setText(serverIP);
+
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE); //get Sensor Information from Phone
         String sensor_error = getResources().getString(R.string.error_no_sensor);
@@ -81,10 +95,33 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         startActivity(intent);
     }
 
+
+
     public void startSendingData(View view){
         //create connection to server and send Accelerometer Data in real time
         Intent intent = new Intent(getApplicationContext(), streamSensorData.class);
         startService(intent);
+    }
+
+    public void onClickSubmit(View view){
+        /* get input data and give it to streamSensorData */
+        Log.d("XXX","button pressed");
+
+        EditText userInputIp = (EditText) findViewById(R.id.userInputIp);
+        String theNewIP = userInputIp.getText().toString();
+        //serverIP = userInputIp.getText().toString();
+        EditText userInputPort = (EditText)findViewById(R.id.userInputPort);
+        int theNewPort = Integer.parseInt(userInputPort.getText().toString());
+        //PORT = Integer.valueOf((String) userInputIp.getText());
+
+        Log.d("XXX", "New IP set to: " + theNewIP);
+        Log.d("XXX", "New Port set to: " + theNewPort);
+
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra(EXTRA_TEXT,theNewIP);
+        startService(intent);
+        //Intent intent = new Intent(getApplicationContext(), streamSensorData.class);
+        //startService(intent);
     }
 
    /* public void onClickSettings(View view){

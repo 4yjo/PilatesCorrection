@@ -10,11 +10,15 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 public class Settings extends AppCompatActivity {
+    public static final String EXTRA_TEXT= Settings.EXTRA_TEXT;
+    public static final String EXTRA_NUMBER = Settings.EXTRA_NUMBER;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,20 +49,5 @@ public class Settings extends AppCompatActivity {
     }
 
 
-    public void onClickMain(View view){
-        //create connection to server and send Accelerometer Data in real time
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startService(intent);
-    }
-
-
-    public void onClickAbout(View view){
-        //create connection to server and send Accelerometer Data in real time
-        Intent intent = new Intent(getApplicationContext(), About.class);
-        startService(intent);
-
-        //NavHostFragment.findNavController(SecondFragment.this)
-        //                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
-    }
 
 }

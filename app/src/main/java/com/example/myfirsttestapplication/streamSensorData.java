@@ -18,6 +18,9 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import static com.example.myfirsttestapplication.MainActivity.PORT;
+import static com.example.myfirsttestapplication.MainActivity.serverIP;
+
 public class streamSensorData extends Service implements SensorEventListener {
     /* Take sensor data from SensorEvents and send sensor data to a server in real time.
     The server is running on a second device (laptop) in processing file named "server.pde"
@@ -32,9 +35,6 @@ public class streamSensorData extends Service implements SensorEventListener {
      */
 
 
-    private static final String serverIP = "192.168.0.200."; // defaults to IP Address of Laptop that runs server.pde
-                                                // may be changed by user in settings of the app
-    private static final int PORT = 12345;
     private static Socket link; //created in createConnection
 
 
