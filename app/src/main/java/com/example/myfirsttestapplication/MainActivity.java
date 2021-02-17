@@ -28,12 +28,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private TextView mAccelerometerText;
     private Vibrator mVibrator;
 
-    public static String serverIP = "192.168.0.200."; // defaults to IP Address of Laptop that runs server.pde
+    private boolean sendingData;
+
+    public static String mServerIP = "192.168.0.200."; // defaults to IP Address of Laptop that runs server.pde
                                                       // may be changed by user in settings of the app
     public static int PORT = 12345;
 
-    public static final String EXTRA_TEXT= MainActivity.EXTRA_TEXT;
-    public static final String EXTRA_NUMBER = MainActivity.EXTRA_NUMBER;
 
 
     //TODO: onCreate send data all the time, also when app is not running in the foreground > better use onStart
@@ -43,13 +43,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ActionBar actionBar = getSupportActionBar();
-
-        Intent intent = getIntent();
-        serverIP = intent.getStringExtra(EXTRA_TEXT);
-
-        TextView showIP = (TextView) findViewById(R.id.showIP);
-        showIP.setText(serverIP);
-
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE); //get Sensor Information from Phone
         String sensor_error = getResources().getString(R.string.error_no_sensor);
@@ -96,31 +89,39 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         /* get input data and give it to streamSensorData */
         Log.d("XXX","button pressed");
 
-       /* EditText userInputIp = (EditText) findViewById(R.id.userInputIp);
-        String theNewIP = userInputIp.getText().toString();
-        //serverIP = userInputIp.getText().toString();
-        EditText userInputPort = (EditText)findViewById(R.id.userInputPort);
-        int theNewPort = Integer.parseInt(userInputPort.getText().toString());
+        stopSendingData();
+
+        EditText userInputIp = (EditText) findViewById(R.id.userInputIp);
+        //String theNewIP = userInputIp.getText().toString();
+        mServerIP = userInputIp.getText().toString();
+        //EditText userInputPort = (EditText)findViewById(R.id.userInputPort);
+        //int theNewPort = Integer.parseInt(userInputPort.getText().toString());
         //PORT = Integer.valueOf((String) userInputIp.getText());
 
-        Log.d("XXX", "New IP set to: " + theNewIP);
-        Log.d("XXX", "New Port set to: " + theNewPort);
+        Log.d("XXX", "New IP set to: " + mServerIP);
+        //Log.d("XXX", "New Port set to: " + theNewPort);
 
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.putExtra(EXTRA_TEXT,theNewIP);
+        Intent intent = new Intent(getApplicationContext(), streamSensorData.class);
         startService(intent);
-        //Intent intent = new Intent(getApplicationContext(), streamSensorData.class);
-        //startService(intent);
 
-        */
     }
 
 
 
     public void startSendingData(View view){
         //create connection to server and send Accelerometer Data in real time
+        sendingData=true;
         Intent intent = new Intent(getApplicationContext(), streamSensorData.class);
         startService(intent);
+    }
+
+    public void stopSendingData(){
+        if (sendingData){
+            //stop streamSensorData
+            Intent intent = new Intent(getApplicationContext(), streamSensorData.class);
+            stopService(intent);
+            sendingData = false;
+        }
     }
 
 

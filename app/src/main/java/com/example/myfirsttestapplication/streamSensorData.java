@@ -19,7 +19,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import static com.example.myfirsttestapplication.MainActivity.PORT;
-import static com.example.myfirsttestapplication.MainActivity.serverIP;
+import static com.example.myfirsttestapplication.MainActivity.mServerIP;
 
 public class streamSensorData extends Service implements SensorEventListener {
     /* Take sensor data from SensorEvents and send sensor data to a server in real time.
@@ -81,9 +81,9 @@ public class streamSensorData extends Service implements SensorEventListener {
         @Override
         protected Void doInBackground(Void... voids){
 
-            // first, see if IP Adress of laptop can be found
+            // first, see if IP Address of laptop can be found
             try {
-                InetAddress address =  InetAddress.getByName(serverIP);
+                InetAddress address =  InetAddress.getByName(mServerIP);
                 Log.d("BBB", "Found Server on ip " + address.toString());
             }
             catch (UnknownHostException e) {
@@ -93,7 +93,7 @@ public class streamSensorData extends Service implements SensorEventListener {
             // then, create socket that connects to this ip adsress
             //(Port must be same as in server.pde; may be changed by user in settings of the app)
             try {
-                link = new Socket(serverIP, PORT);
+                link = new Socket(mServerIP, PORT);
                 Log.d("BBB", "successfully connected to server");
 
             }
