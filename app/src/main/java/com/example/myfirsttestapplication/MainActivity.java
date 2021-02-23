@@ -19,7 +19,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -114,9 +117,43 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void startSendingData(View view){
-        //create connection to server and send Accelerometer Data in real time
+        //create connection to server and send Accelerometer Data in real time when "Los geht's" is clicked
 
         //TODO: show connection status // toast if connection failed
+
+        //Remove Button "Los geht's" and replace it with Button "Pause"
+
+        LinearLayout myLayout = findViewById(R.id.buttonHolder);
+
+        // remove Let's Go Button
+        Button myButtonStart = (Button)findViewById(R.id.letsGoButton);
+        //ViewGroup layout = (ViewGroup) myButton.getParent();
+        if (null!= myLayout){
+            myLayout.removeAllViews();
+        }
+
+
+        // Create Pause Button
+        Button myButtonPause = new Button(this);
+        myButtonPause.setText(R.string.pause);
+        myButtonPause.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        myButtonPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               stopSendingData();
+            }
+        });
+
+        // Add Button to LinearLayout
+        if (myLayout != null) {
+            myLayout.addView(myButtonPause);
+        }
+
+        // Create Text View to display Accelerometer Data in Real Time
+
+        mAccelerometerText.setText(R.string.label_Accelerometer);
+
+
 
         sendingData=true;
         Intent intent = new Intent(getApplicationContext(), streamSensorData.class);
@@ -130,17 +167,44 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             stopService(intent);
             sendingData = false;
         }
+
+        //Remove Button "Pause" and replace it with Button "Los geht's"
+
+        LinearLayout myLayout = findViewById(R.id.buttonHolder);
+
+        // remove Pause Button & Text View
+        if (myLayout != null){
+                myLayout.removeAllViews();
+        }
+
+        // Create Lets Go Button
+        Button myButtonStart = new Button(this);
+        myButtonStart.setText(R.string.start);
+        myButtonStart.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        myButtonStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startSendingData(view);
+            }
+        });
+
+        // Add Button to LinearLayout
+        if (myLayout != null) {
+            myLayout.addView(myButtonStart);
+        }
+
+        mAccelerometerText.setText(R.string.label_None);
     }
 
 
     @Override
     protected void onStart() {
         super.onStart();
+        //TODO can this be moved to startSendingData?
 
         // register Listener for Accelerometer
         if (mAccelerometer != null){
             mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-            mAccelerometerText = (TextView)findViewById(R.id.label_Accelerometer);
         }
     }
 
@@ -159,9 +223,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         float currentValueY = sensorEvent.values[1];
        // float currentValueZ = sensorEvent.values[2];
 
-
-            mAccelerometerText.setText(getResources().getString(R.string.label_Accelerometer,
-                    currentValueX, currentValueY));
+            if(mAccelerometerText != null) {
+                mAccelerometerText.setText(getResources().getString(R.string.label_Accelerometer,
+                        currentValueX, currentValueY));
+            }
 
             if (currentValueX > 1.5) {
                 // TODO: test what value is good (maybe > 2?)

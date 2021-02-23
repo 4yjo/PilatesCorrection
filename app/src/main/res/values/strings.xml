@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">Reading Sensor Data</string>
     <string name="welcome_text">Track your Training</string>
-    <string name="instructions_text">This App sends position data to the funny Game!\nReady? </string>
+    <string name="instructions_text">This App sends position data to the Pilates Game running on your Computer!\nReady? </string>
     <string name="start">Let\'s go</string>
     <string name="placeholder">Text is generated on runtime</string>
+    <string name="label_None">" "</string>
     <string name="label_Accelerometer"> Accelerometer Data:\n X: %1$.2f Y: %2$.2f</string>
     <string name="label_listSensorButton">Show Sensors</string>
     <string name="AboutTextHeader">About this App</string>
@@ -43,5 +44,6 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="home">Home</string>
+    <string name="pause">Pause</string>
 
 </resources>
