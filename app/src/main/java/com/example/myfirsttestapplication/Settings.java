@@ -39,15 +39,18 @@ public class Settings extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item){switch(item.getItemId()){
 
-        case R.id.exit:
-            //close app
-            this.finishAffinity();
+        case R.id.home:
+            Intent intentHome = new Intent (this, MainActivity.class);
+            Log.d("XXX", "Home selected");
+            startActivity(intentHome);
+            break;
         case R.id.about:
             Intent intentAbout = new Intent(this, About.class);
             startActivity(intentAbout);
+            Log.d("XXX", "About selected");
+            break;
         case R.id.settings:
-            Intent intentSettings = new Intent(this, Settings.class);
-            startActivity(intentSettings);
+            break;
     }
         return(super.onOptionsItemSelected(item));
     }

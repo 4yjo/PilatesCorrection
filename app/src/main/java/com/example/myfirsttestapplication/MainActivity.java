@@ -70,15 +70,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public boolean onOptionsItemSelected(MenuItem item){switch(item.getItemId()){
 
-        case R.id.exit:
-            //close app
-            this.finishAffinity();
+        case R.id.home:
+            break;
         case R.id.about:
             Intent intentAbout = new Intent(this, About.class);
             startActivity(intentAbout);
+            Log.d("XXX", "About selected");
+            break;
         case R.id.settings:
             Intent intentSettings = new Intent(this, Settings.class);
             startActivity(intentSettings);
+            Log.d("XXX", "Settings selected");
+            break;
         }
         return(super.onOptionsItemSelected(item));
     }

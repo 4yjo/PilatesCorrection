@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
 
     <item
-        android:id="@+id/about" android:icon="@android:drawable/ic_dialog_info" app:showAsAction="never" android:title="@string/about">
+        android:id="@+id/about"  android:title="@string/about">
     </item>
     <item
-        android:id="@+id/settings" android:icon="@android:drawable/ic_dialog_info" app:showAsAction="never" android:title="@string/settings">
+        android:id="@+id/settings"  android:title="@string/settings">
     </item>
     <item
-        android:id="@+id/exit"  app:showAsAction="never" android:title="@string/exit">
+        android:id="@+id/home"  android:title="@string/home">
     </item>
 
 
