@@ -11,7 +11,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.Menu;
@@ -28,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private TextView mAccelerometerText;
     private Vibrator mVibrator;
 
-    private boolean sendingData;
+    public static boolean sendingData;
 
     public static String mServerIP = "192.168.0.200."; // defaults to IP Address of Laptop that runs server.pde
                                                       // may be changed by user in settings of the app
@@ -74,6 +76,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         case R.id.about:
             Intent intentAbout = new Intent(this, About.class);
             startActivity(intentAbout);
+        case R.id.settings:
+            Intent intentSettings = new Intent(this, Settings.class);
+            startActivity(intentSettings);
         }
         return(super.onOptionsItemSelected(item));
     }
@@ -92,24 +97,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         stopSendingData();
 
         EditText userInputIp = (EditText) findViewById(R.id.userInputIp);
-        //String theNewIP = userInputIp.getText().toString();
         mServerIP = userInputIp.getText().toString();
-        //EditText userInputPort = (EditText)findViewById(R.id.userInputPort);
+        EditText userInputPort = (EditText)findViewById(R.id.userInputPort);
         //int theNewPort = Integer.parseInt(userInputPort.getText().toString());
-        //PORT = Integer.valueOf((String) userInputIp.getText());
+        PORT = Integer.parseInt(userInputPort.getText().toString());
 
         Log.d("XXX", "New IP set to: " + mServerIP);
-        //Log.d("XXX", "New Port set to: " + theNewPort);
+        Log.d("XXX", "New Port set to: " + PORT);
 
         Intent intent = new Intent(getApplicationContext(), streamSensorData.class);
         startService(intent);
 
     }
 
-
-
     public void startSendingData(View view){
         //create connection to server and send Accelerometer Data in real time
+
+        //TODO: show connection status // toast if connection failed
+
         sendingData=true;
         Intent intent = new Intent(getApplicationContext(), streamSensorData.class);
         startService(intent);
@@ -125,24 +130,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
 
-
-   /* public void onClickSettings(View view){
-        //create connection to server and send Accelerometer Data in real time
-        Intent intent = new Intent(getApplicationContext(), Settings.class);
-        startService(intent);
-    }
-
-
-    public void onClickAbout(View view){
-        //create connection to server and send Accelerometer Data in real time
-        Intent intent = new Intent(getApplicationContext(), About.class);
-        startService(intent);
-
-        //NavHostFragment.findNavController(SecondFragment.this)
-        //                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
-    }
-
-    */
     @Override
     protected void onStart() {
         super.onStart();
@@ -167,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onSensorChanged(SensorEvent sensorEvent) {
         float currentValueX = sensorEvent.values[0]; // 0 = X-Axis, 1 = Y-Axis, 2 = Z-Axis
         float currentValueY = sensorEvent.values[1];
-        float currentValueZ = sensorEvent.values[2];
+       // float currentValueZ = sensorEvent.values[2];
 
 
             mAccelerometerText.setText(getResources().getString(R.string.label_Accelerometer,
@@ -176,8 +163,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             if (currentValueX > 1.5) {
                 // TODO: test what value is good (maybe > 2?)
 
-                // TODO: check for Android API Level maybe in switch-case instead of Type Accelerometer, so it only has to be done once
-                mVibrator.vibrate(50);
+
+                // TODO: make this if else somewhere else so it just checks version once
+                if (Build.VERSION.SDK_INT >= 26) {
+                    mVibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
+                }
+                else {
+                    mVibrator.vibrate(50);
+                }
 
             } else if (currentValueX < -1.5) {
 
@@ -195,6 +188,5 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
-
 
 }

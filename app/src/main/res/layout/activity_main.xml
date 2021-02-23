@@ -42,51 +42,6 @@
         android:onClick="startSendingData"
         android:text="@string/start" />
 
-
-    <TextView
-        android:id="@+id/IntroSetting"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/introSettings" />
-
-    <TextView
-        android:id="@+id/label_ip"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/label_ip"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/userInputIp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:text="@string/input_ip" />
-
-    <TextView
-        android:id="@+id/label_port"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/label_port"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/userInputPort"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number"
-        android:text="@string/input_port" />
-
-    <Button
-        android:id="@+id/SubmitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onClickSubmit"
-        android:text="@string/submitButton" />
-
     <TextView
         android:id="@+id/showIP"
         android:layout_width="168dp"
