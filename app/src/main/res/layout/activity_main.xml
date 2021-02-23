@@ -12,19 +12,23 @@
 
 
     <TextView
-        android:id="@+id/WelcomeText"
+        android:id="@+id/SettingsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="88dp"
-        android:layout_marginLeft="88dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="50dp"
         android:text="@string/welcome_text"
         android:textSize="24sp" />
 
     <TextView
-        android:id="@+id/instructionText"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:id="@+id/introText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
         android:text="@string/instructions_text"
         android:textStyle="italic" />
 
@@ -32,18 +36,72 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="136dp"
-        android:layout_marginLeft="136dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:onClick="startSendingData"
         android:text="@string/start" />
 
+
     <TextView
-        android:id="@+id/label_Accelerometer"
+        android:id="@+id/IntroSetting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/introSettings" />
+
+    <TextView
+        android:id="@+id/label_ip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_ip"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/userInputIp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="@string/input_ip" />
+
+    <TextView
+        android:id="@+id/label_port"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_port"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/userInputPort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:text="@string/input_port" />
+
+    <Button
+        android:id="@+id/SubmitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
+        android:onClick="onClickSubmit"
+        android:text="@string/submitButton" />
+
+    <TextView
+        android:id="@+id/showIP"
+        android:layout_width="168dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/label_Accelerometer"
+        android:layout_width="168dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginBottom="324dp"
         android:text="@string/label_Accelerometer" />
 

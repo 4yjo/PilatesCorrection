@@ -1,6 +1,8 @@
 package com.example.myfirsttestapplication;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,16 +14,26 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     private SensorManager mSensorManager; //create instance of sensor manager system service following https://developer.android.com/codelabs/advanced-android-training-sensor-data#2
     private Sensor mAccelerometer;
     private TextView mAccelerometerText;
     private Vibrator mVibrator;
-    public String data;
-    private Object streamSensorData;
+
+    private boolean sendingData;
+
+    public static String mServerIP = "192.168.0.200."; // defaults to IP Address of Laptop that runs server.pde
+                                                      // may be changed by user in settings of the app
+    public static int PORT = 12345;
+
 
 
     //TODO: onCreate send data all the time, also when app is not running in the foreground > better use onStart
@@ -30,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ActionBar actionBar = getSupportActionBar();
+
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE); //get Sensor Information from Phone
         String sensor_error = getResources().getString(R.string.error_no_sensor);
         mAccelerometerText = (TextView) findViewById(R.id.label_Accelerometer);
@@ -44,6 +58,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        //creates Menu
+        getMenuInflater().inflate(R.menu.menu_items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){switch(item.getItemId()){
+
+        case R.id.exit:
+            //close app
+            this.finishAffinity();
+        case R.id.about:
+            Intent intentAbout = new Intent(this, About.class);
+            startActivity(intentAbout);
+        }
+        return(super.onOptionsItemSelected(item));
+    }
+
     public void showSensorList(View view){
         Log.d("AAA", "Button pressed");
         //called on Button Click show Sensors
@@ -51,12 +85,64 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         startActivity(intent);
     }
 
+    public void onClickSubmit(View view){
+        /* get input data and give it to streamSensorData */
+        Log.d("XXX","button pressed");
+
+        stopSendingData();
+
+        EditText userInputIp = (EditText) findViewById(R.id.userInputIp);
+        //String theNewIP = userInputIp.getText().toString();
+        mServerIP = userInputIp.getText().toString();
+        //EditText userInputPort = (EditText)findViewById(R.id.userInputPort);
+        //int theNewPort = Integer.parseInt(userInputPort.getText().toString());
+        //PORT = Integer.valueOf((String) userInputIp.getText());
+
+        Log.d("XXX", "New IP set to: " + mServerIP);
+        //Log.d("XXX", "New Port set to: " + theNewPort);
+
+        Intent intent = new Intent(getApplicationContext(), streamSensorData.class);
+        startService(intent);
+
+    }
+
+
+
     public void startSendingData(View view){
         //create connection to server and send Accelerometer Data in real time
+        sendingData=true;
         Intent intent = new Intent(getApplicationContext(), streamSensorData.class);
         startService(intent);
     }
 
+    public void stopSendingData(){
+        if (sendingData){
+            //stop streamSensorData
+            Intent intent = new Intent(getApplicationContext(), streamSensorData.class);
+            stopService(intent);
+            sendingData = false;
+        }
+    }
+
+
+
+   /* public void onClickSettings(View view){
+        //create connection to server and send Accelerometer Data in real time
+        Intent intent = new Intent(getApplicationContext(), Settings.class);
+        startService(intent);
+    }
+
+
+    public void onClickAbout(View view){
+        //create connection to server and send Accelerometer Data in real time
+        Intent intent = new Intent(getApplicationContext(), About.class);
+        startService(intent);
+
+        //NavHostFragment.findNavController(SecondFragment.this)
+        //                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
+    }
+
+    */
     @Override
     protected void onStart() {
         super.onStart();
@@ -85,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
             mAccelerometerText.setText(getResources().getString(R.string.label_Accelerometer,
-                    currentValueX, currentValueY, currentValueZ));
+                    currentValueX, currentValueY));
 
             if (currentValueX > 1.5) {
                 // TODO: test what value is good (maybe > 2?)

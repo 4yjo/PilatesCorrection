@@ -1,12 +1,46 @@
 <resources>
     <string name="app_name">Reading Sensor Data</string>
     <string name="welcome_text">Track your Training</string>
-    <string name="instructions_text">This App sends position data to the funny Game!\n Ready? </string>
+    <string name="instructions_text">This App sends position data to the funny Game!\nReady? </string>
     <string name="start">Let\'s go</string>
     <string name="placeholder">Text is generated on runtime</string>
-    <string name="label_Accelerometer"> Accelerometer Data: X: %1$.2f Y: %2$.2f Z: %3$.2f</string>
+    <string name="label_Accelerometer"> Accelerometer Data:\n X: %1$.2f Y: %2$.2f</string>
     <string name="label_listSensorButton">Show Sensors</string>
+    <string name="AboutTextHeader">About this App</string>
+    <string name="AboutText">The purpose of this App is to support your Pilates Training in a fun way.\n In the following exercise a lot of people tend to fall into hollow back or sway their hips to one side. Prevent this by tracking your lower back stability: Click the "Lets Go!" Button on the Home Screen and place yout Smartphone on your lower back for tracking.\n More Info: https://github.com/4yjo/PilatesCorrection  </string>
+    <string name="label_ip">Server IP: </string>
+    <string name="label_port">Port: </string>
+    <string name="input_ip">192.168.0.200. </string>
+    <string name="input_port">12345 </string>
     <string name="error_no_sensor">No sensor found on device</string>
     <string name="X_Axis_Icon"> signifier for x-values</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+    <string name="introSettings">Change settings for server connection</string>
+    <string name="submitButton"> Submit Changes </string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="exit">Exit</string>
+    <string name="settings">Settings</string>
+    <string name="about">About</string>
+    <string name="title_activity_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
 </resources>
