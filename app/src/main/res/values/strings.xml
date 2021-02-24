@@ -13,7 +13,8 @@
         In the following exercise a lot of people tend to fall into hollow back or sway their hips to one side.
         Prevent this by tracking your lower back stability: Click the "Lets Go!" Button on the Home Screen and
         place your Smartphone on your lower back for tracking.\n
-        More Info: <a href="https://github.com/4yjo/PilatesCorrection" />  </string>
+        More Info: <a href="https://github.com/4yjo/PilatesCorrection"> https://github.com/4yjo/PilatesCorrection
+        </a></string>
     <string name="label_ip">Server IP: </string>
     <string name="label_port">Port: </string>
     <string name="input_ip">192.168.0.200. </string>

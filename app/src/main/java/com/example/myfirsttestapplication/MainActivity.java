@@ -92,23 +92,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         startActivity(intent);
     }
 
-/*    public void onClickSubmit(View view){
-        *//* get user input in "Settings" and give it to streamSensorData Class *//*
-
-        stopSendingData();
-
-        //get Data from Edit Text (Text Input Areas)
-        EditText userInputIp = findViewById(R.id.userInputIp);
-        mServerIP = userInputIp.getText().toString();
-        EditText userInputPort = findViewById(R.id.userInputPort);
-        PORT = Integer.parseInt(userInputPort.getText().toString());
-
-        Log.d("XXX", "New IP set to: " + mServerIP);
-        Log.d("XXX", "New Port set to: " + PORT);
-
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startService(intent);
-    }*/
 
     public void startSendingData(View view){
         /*change sendingData, connects to Server by calling streamSensorData class, also toggles button */
@@ -116,31 +99,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //change sendingData to true, so vibrator gets activated in onSensorChanged
         sendingData=true;
 
-        //Remove Button "Los geht's" and replace it with Button "Pause"
-        LinearLayout myLayout = findViewById(R.id.buttonHolder);
+       changeView();
 
-        // remove Let's Go Button
-        if (null!= myLayout){
-            myLayout.removeAllViews();
-        }
-
-
-        // Create Pause Button
-        Button myButtonPause = new Button(this);
-        myButtonPause.setText(R.string.pause);
-        myButtonPause.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        myButtonPause.setOnClickListener(view1 -> stopSendingData());
-
-        // Add Button to LinearLayout
-        if (myLayout != null) {
-            myLayout.addView(myButtonPause);
-        }
-
-        // Show Accelerometer Data in Real Time
-        mAccelerometerText.setVisibility(View.VISIBLE);
-
-
-        //create connection to server and send Accelerometer Data in real time when "Los geht's" is clicked
+        //create connection to server and send Accelerometer Data in real time when "Let's go" is clicked
         Intent intent = new Intent(this, streamSensorData.class);
         startService(intent);
     }
@@ -154,30 +115,47 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 sendingData = false;
             }
 
-            // remove Button "Pause" and replace it with Button "Los geht's"
-            LinearLayout myLayout = findViewById(R.id.buttonHolder);
+          changeView();
+    }
 
-            // remove Pause Button & Text View
+    public void changeView(){
+        //empty Layout Container that holds "Let's go" or "Pause" Button
+        LinearLayout myLayout = findViewById(R.id.buttonHolder);
+        if (null!= myLayout){
+            myLayout.removeAllViews();
+        }
+
+        if (sendingData){
+            // Create Pause Button
+            Button myButtonPause = new Button(this);
+            myButtonPause.setText(R.string.pause);
+            myButtonPause.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            myButtonPause.setOnClickListener(view1 -> stopSendingData());
+
+            // Add Button to LinearLayout
             if (myLayout != null) {
-                myLayout.removeAllViews();
+                myLayout.addView(myButtonPause);
             }
 
-
+            // Show Accelerometer Data in Real Time
+            mAccelerometerText.setVisibility(View.VISIBLE);
+        }
+        else{
             // Create Lets Go Button
             Button myButtonStart = new Button(this);
             myButtonStart.setText(R.string.start);
             myButtonStart.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             myButtonStart.setOnClickListener(this::startSendingData);
 
-        // Add Button to LinearLayout
-        if (myLayout != null) {
-            myLayout.addView(myButtonStart);
+            // Add Button to LinearLayout
+            if (myLayout != null) {
+                myLayout.addView(myButtonStart);
+            }
+
+
+            mAccelerometerText.setVisibility(View.INVISIBLE);
         }
-
-
-        mAccelerometerText.setVisibility(View.INVISIBLE);
     }
-
 
     @Override
     protected void onStart() {
@@ -186,7 +164,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (mAccelerometer != null){
             mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         }
-        mAccelerometerText.setVisibility(View.INVISIBLE);
+        //mAccelerometerText.setVisibility(View.INVISIBLE);
+        changeView();
     }
 
 
@@ -209,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
         if(sendingData) {
-        // only check sensordata if user clicked "Los geht's" button
+        // only check sensordata if user clicked "Let's go" button
             if (mAccelerometerText != null) { //TODO Check if redundant
                 mAccelerometerText.setText(getResources().getString(R.string.label_Accelerometer,
                         currentValueX, currentValueY));
