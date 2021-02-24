@@ -1,13 +1,7 @@
 package com.example.myfirsttestapplication;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.content.AsyncQueryHandler;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -26,7 +20,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     private SensorManager mSensorManager; //create instance of sensor manager system service following https://developer.android.com/codelabs/advanced-android-training-sensor-data#2
@@ -34,48 +28,45 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private TextView mAccelerometerText;
     private Vibrator mVibrator;
 
-    public static boolean sendingData;
+    public static boolean sendingData; //value to check if user wants to set data. set true in startSendingData()
 
     public static String mServerIP = "192.168.0.200."; // defaults to IP Address of Laptop that runs server.pde
-                                                      // may be changed by user in settings of the app
-    public static int PORT = 12345;
+                                                        // may be changed by user in settings of the app
+     public static int PORT = 12345;
 
 
-
-    //TODO: onCreate send data all the time, also when app is not running in the foreground > better use onStart
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //create view with menu action bar item
+        //create view
         setContentView(R.layout.activity_main);
-        ActionBar actionBar = getSupportActionBar();
 
         //get Sensor Information from Phone
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         String sensor_error = getResources().getString(R.string.error_no_sensor);
-        mAccelerometerText = (TextView) findViewById(R.id.label_Accelerometer);
+        mAccelerometerText = findViewById(R.id.label_Accelerometer);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
-        mVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-
 
         if (mAccelerometer == null){
             mAccelerometerText.setText(sensor_error);
         }
 
+        //connect to device vibrator
+        mVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        //creates Menu
+        /*creates Menu*/
         getMenuInflater().inflate(R.menu.menu_items, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){switch(item.getItemId()){
+        /*create actions for each menu item*/
 
         case R.id.home:
             break;
@@ -94,40 +85,41 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void showSensorList(View view){
-        Log.d("AAA", "Button pressed");
-        //called on Button Click show Sensors
+        /*displays a list of all available Sensors of the device*/
+
+        //can be accessed via button click but is not set now
         Intent intent = new Intent (this, listSensors.class);
         startActivity(intent);
     }
 
-    public void onClickSubmit(View view){
-        /* get input data and give it to streamSensorData */
-        Log.d("XXX","button pressed");
+/*    public void onClickSubmit(View view){
+        *//* get user input in "Settings" and give it to streamSensorData Class *//*
 
         stopSendingData();
 
-        EditText userInputIp = (EditText) findViewById(R.id.userInputIp);
+        //get Data from Edit Text (Text Input Areas)
+        EditText userInputIp = findViewById(R.id.userInputIp);
         mServerIP = userInputIp.getText().toString();
-        EditText userInputPort = (EditText)findViewById(R.id.userInputPort);
-        //int theNewPort = Integer.parseInt(userInputPort.getText().toString());
+        EditText userInputPort = findViewById(R.id.userInputPort);
         PORT = Integer.parseInt(userInputPort.getText().toString());
 
         Log.d("XXX", "New IP set to: " + mServerIP);
         Log.d("XXX", "New Port set to: " + PORT);
 
-        Intent intent = new Intent(getApplicationContext(), streamSensorData.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startService(intent);
-
-    }
+    }*/
 
     public void startSendingData(View view){
+        /*change sendingData, connects to Server by calling streamSensorData class, also toggles button */
+
+        //change sendingData to true, so vibrator gets activated in onSensorChanged
+        sendingData=true;
 
         //Remove Button "Los geht's" and replace it with Button "Pause"
         LinearLayout myLayout = findViewById(R.id.buttonHolder);
 
         // remove Let's Go Button
-        Button myButtonStart = (Button)findViewById(R.id.letsGoButton);
-        //ViewGroup layout = (ViewGroup) myButton.getParent();
         if (null!= myLayout){
             myLayout.removeAllViews();
         }
@@ -137,31 +129,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Button myButtonPause = new Button(this);
         myButtonPause.setText(R.string.pause);
         myButtonPause.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        myButtonPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               stopSendingData();
-            }
-        });
+        myButtonPause.setOnClickListener(view1 -> stopSendingData());
 
         // Add Button to LinearLayout
         if (myLayout != null) {
             myLayout.addView(myButtonPause);
         }
 
-        // Create Text View to display Accelerometer Data in Real Time
-
+        // Show Accelerometer Data in Real Time
         mAccelerometerText.setVisibility(View.VISIBLE);
-       // mAccelerometerText.setText(R.string.label_Accelerometer);
+
 
         //create connection to server and send Accelerometer Data in real time when "Los geht's" is clicked
-
-        sendingData=true;
-        Intent intent = new Intent(getApplicationContext(), streamSensorData.class);
+        Intent intent = new Intent(this, streamSensorData.class);
         startService(intent);
     }
 
     public void stopSendingData() {
+        /* cancels connection to Server and sets sendingData to false to stop Vibrator, also toggle button*/
             if (sendingData) {
                 //stop streamSensorData
                 Intent intent = new Intent(getApplicationContext(), streamSensorData.class);
@@ -169,8 +154,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 sendingData = false;
             }
 
-            //Remove Button "Pause" and replace it with Button "Los geht's"
-
+            // remove Button "Pause" and replace it with Button "Los geht's"
             LinearLayout myLayout = findViewById(R.id.buttonHolder);
 
             // remove Pause Button & Text View
@@ -179,21 +163,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
 
 
-        // Create Lets Go Button
-        Button myButtonStart = new Button(this);
-        myButtonStart.setText(R.string.start);
-        myButtonStart.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        myButtonStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startSendingData(view);
-            }
-        });
+            // Create Lets Go Button
+            Button myButtonStart = new Button(this);
+            myButtonStart.setText(R.string.start);
+            myButtonStart.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            myButtonStart.setOnClickListener(this::startSendingData);
 
         // Add Button to LinearLayout
         if (myLayout != null) {
             myLayout.addView(myButtonStart);
         }
+
 
         mAccelerometerText.setVisibility(View.INVISIBLE);
     }
@@ -201,9 +181,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     protected void onStart() {
+        /*register Listener for Accelerometer*/
         super.onStart();
-
-         //register Listener for Accelerometer
         if (mAccelerometer != null){
             mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         }
@@ -214,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     protected void onStop(){
+        /*unregister Listener for Accelerometer*/
         super.onStop();
         mSensorManager.unregisterListener(this); // unregisters all registered Listeners
     }
@@ -221,12 +201,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        float currentValueX = sensorEvent.values[0]; // 0 = X-Axis, 1 = Y-Axis, 2 = Z-Axis
+        /* implement haptic feedback through vibrator */
+
+        //get Values form Accelerometer: 0 = X-Axis, 1 = Y-Axis, 2 = Z-Axis
+        float currentValueX = sensorEvent.values[0];
         float currentValueY = sensorEvent.values[1];
-       // float currentValueZ = sensorEvent.values[2];
+
 
         if(sendingData) {
-        // only check Sensordata if user clicked "Los geht's" button
+        // only check sensordata if user clicked "Los geht's" button
             if (mAccelerometerText != null) { //TODO Check if redundant
                 mAccelerometerText.setText(getResources().getString(R.string.label_Accelerometer,
                         currentValueX, currentValueY));

@@ -1,31 +1,31 @@
 <resources>
     <string name="app_name">Reading Sensor Data</string>
     <string name="welcome_text">Track your Training</string>
-    <string name="instructions_text">This App sends position data to the Pilates Game running on your Computer!\nReady? </string>
+    <string name="instructions_text">This App sends position data to the Pilates Game running on
+        your Computer!\nReady? </string>
     <string name="start">Let\'s go</string>
     <string name="placeholder">Text is generated on runtime</string>
     <string name="label_None">" "</string>
     <string name="label_Accelerometer"> Accelerometer Data:\n X: %1$.2f Y: %2$.2f</string>
     <string name="label_listSensorButton">Show Sensors</string>
     <string name="AboutTextHeader">About this App</string>
-    <string name="AboutText">The purpose of this App is to support your Pilates Training in a fun way.\n In the following exercise a lot of people tend to fall into hollow back or sway their hips to one side. Prevent this by tracking your lower back stability: Click the "Lets Go!" Button on the Home Screen and place yout Smartphone on your lower back for tracking.\n More Info: https://github.com/4yjo/PilatesCorrection  </string>
+    <string name="AboutText">The purpose of this App is to support your Pilates Training in a fun way.\n
+        In the following exercise a lot of people tend to fall into hollow back or sway their hips to one side.
+        Prevent this by tracking your lower back stability: Click the "Lets Go!" Button on the Home Screen and
+        place your Smartphone on your lower back for tracking.\n
+        More Info: <a href="https://github.com/4yjo/PilatesCorrection" />  </string>
     <string name="label_ip">Server IP: </string>
     <string name="label_port">Port: </string>
     <string name="input_ip">192.168.0.200. </string>
     <string name="input_port">12345 </string>
     <string name="error_no_sensor">No sensor found on device</string>
     <string name="X_Axis_Icon"> signifier for x-values</string>
-    <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
     <string name="introSettings">Change settings for server connection</string>
     <string name="submitButton"> Submit Changes </string>
-
-    <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>
     <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
@@ -40,7 +40,6 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="home">Home</string>

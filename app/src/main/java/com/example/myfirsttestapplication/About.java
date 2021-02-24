@@ -24,14 +24,14 @@ public class About extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        //creates Menu
+        /*creates Menu*/
         getMenuInflater().inflate(R.menu.menu_items, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){switch(item.getItemId()){
-
+        /* activities for menu items*/
         case R.id.home:
             Intent intentHome = new Intent (this, MainActivity.class);
             startActivity(intentHome);
