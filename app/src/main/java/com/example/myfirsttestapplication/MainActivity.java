@@ -4,6 +4,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.AsyncQueryHandler;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -46,10 +47,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //create view with menu action bar item
         setContentView(R.layout.activity_main);
         ActionBar actionBar = getSupportActionBar();
 
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE); //get Sensor Information from Phone
+        //get Sensor Information from Phone
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         String sensor_error = getResources().getString(R.string.error_no_sensor);
         mAccelerometerText = (TextView) findViewById(R.id.label_Accelerometer);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -117,12 +121,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void startSendingData(View view){
-        //create connection to server and send Accelerometer Data in real time when "Los geht's" is clicked
-
-        //TODO: show connection status // toast if connection failed
 
         //Remove Button "Los geht's" and replace it with Button "Pause"
-
         LinearLayout myLayout = findViewById(R.id.buttonHolder);
 
         // remove Let's Go Button
@@ -151,31 +151,33 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         // Create Text View to display Accelerometer Data in Real Time
 
-        mAccelerometerText.setText(R.string.label_Accelerometer);
+        mAccelerometerText.setVisibility(View.VISIBLE);
+       // mAccelerometerText.setText(R.string.label_Accelerometer);
 
-
+        //create connection to server and send Accelerometer Data in real time when "Los geht's" is clicked
 
         sendingData=true;
         Intent intent = new Intent(getApplicationContext(), streamSensorData.class);
         startService(intent);
     }
 
-    public void stopSendingData(){
-        if (sendingData){
-            //stop streamSensorData
-            Intent intent = new Intent(getApplicationContext(), streamSensorData.class);
-            stopService(intent);
-            sendingData = false;
-        }
+    public void stopSendingData() {
+            if (sendingData) {
+                //stop streamSensorData
+                Intent intent = new Intent(getApplicationContext(), streamSensorData.class);
+                stopService(intent);
+                sendingData = false;
+            }
 
-        //Remove Button "Pause" and replace it with Button "Los geht's"
+            //Remove Button "Pause" and replace it with Button "Los geht's"
 
-        LinearLayout myLayout = findViewById(R.id.buttonHolder);
+            LinearLayout myLayout = findViewById(R.id.buttonHolder);
 
-        // remove Pause Button & Text View
-        if (myLayout != null){
+            // remove Pause Button & Text View
+            if (myLayout != null) {
                 myLayout.removeAllViews();
-        }
+            }
+
 
         // Create Lets Go Button
         Button myButtonStart = new Button(this);
@@ -193,19 +195,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             myLayout.addView(myButtonStart);
         }
 
-        mAccelerometerText.setText(R.string.label_None);
+        mAccelerometerText.setVisibility(View.INVISIBLE);
     }
 
 
     @Override
     protected void onStart() {
         super.onStart();
-        //TODO can this be moved to startSendingData?
 
-        // register Listener for Accelerometer
+         //register Listener for Accelerometer
         if (mAccelerometer != null){
             mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         }
+        mAccelerometerText.setVisibility(View.INVISIBLE);
     }
 
 
@@ -223,7 +225,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         float currentValueY = sensorEvent.values[1];
        // float currentValueZ = sensorEvent.values[2];
 
-            if(mAccelerometerText != null) {
+        if(sendingData) {
+        // only check Sensordata if user clicked "Los geht's" button
+            if (mAccelerometerText != null) { //TODO Check if redundant
                 mAccelerometerText.setText(getResources().getString(R.string.label_Accelerometer,
                         currentValueX, currentValueY));
             }
@@ -235,8 +239,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 // TODO: make this if else somewhere else so it just checks version once
                 if (Build.VERSION.SDK_INT >= 26) {
                     mVibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
-                }
-                else {
+                } else {
                     mVibrator.vibrate(50);
                 }
 
@@ -244,8 +247,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 mVibrator.vibrate(50);
             } else {
-               // do not vibrate
+                // do not vibrate
             }
+        }
     }
 
     @Override
