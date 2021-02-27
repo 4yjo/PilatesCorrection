@@ -6,6 +6,7 @@ String incoming;
 String[] coord;
 float xValue;
 float yValue;
+float angle = 0;
 int score = 0; 
 int time1 = 2000;
 int time2 = 4000;
@@ -29,7 +30,7 @@ void setup(){
 }
 
 void draw(){
-    background(0);
+    background(150);
     fill(255);    
     
     if (millis()<time3){
@@ -52,13 +53,17 @@ void draw(){
     incoming = myClient.readString();
     coord = incoming.split(";");
     xValue = abs(float(coord[0])); //abs() -> absolute numbers, set positive
+    yValue = float(coord[1]);
   }
   
   //calc angle for rotation
-  float angle= map(mouseX, 0, width, -HALF_PI, HALF_PI); // circle = 2*PI, half circle = 1*PI
-  
+  // check for NaN first, to omit blinking of the rocket
+  if (! Float.isNaN(yValue)){
+    angle= map(yValue, -3, 3, -HALF_PI, HALF_PI); // circle = 2*PI, half circle = 1*PI
+  }
   //draw rocket
   translate(width/2, height-100); //shift coordinate system for rotation
+  println(angle);
   rotate(angle);
   shape(rocket, -30, -30, 60,60); //position shape with center at 0,0 to rotate around itself
 }
