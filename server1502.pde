@@ -7,6 +7,7 @@ String[] coord;
 float xValue;
 float yValue;
 float angle = 0;
+float alpha = 100;
 int score = 0; 
 int time1 = 2000;
 int time2 = 4000;
@@ -23,14 +24,25 @@ void setup(){
   surface.setTitle("Pilates Correction!");
   surface.setResizable(true);
   rocket = loadShape("rocket.svg");
+  rocket.disableStyle();
   
   incoming = "";
   
   myServer = new Server(this, 12345);
+  
 }
 
 void draw(){
-    background(150);
+  //draw background image
+  background(0,0,130);
+  noStroke();
+  fill(0,0,160);
+  triangle(50,height,width/2, -30,width-50,height);
+  fill(0,0,190);
+  triangle(100,height,width/2, -30,width-100,height);
+  
+  
+  
     fill(255);    
     
     if (millis()<time3){
@@ -42,8 +54,8 @@ void draw(){
     }
       
     
-    //display xValues
-    text(xValue*100, width-20, height-20);
+    //display xValues or y Values for easier evaluation
+    // text(yValue*100, width-20, height-20);
   
   
   setScore();
@@ -55,17 +67,20 @@ void draw(){
     xValue = abs(float(coord[0])); //abs() -> absolute numbers, set positive
     yValue = float(coord[1]);
   }
-  
+    
   //calc angle for rotation
   // check for NaN first, to omit blinking of the rocket
   if (! Float.isNaN(yValue)){
-    angle= map(yValue, -3, 3, -HALF_PI, HALF_PI); // circle = 2*PI, half circle = 1*PI
+    angle= map(yValue, -3, 3, -HALF_PI, HALF_PI); // circle = 2*PI, half circle = 1*PI 
+    alpha = map(abs(yValue), 0,3, 50,150);
   }
   //draw rocket
   translate(width/2, height-100); //shift coordinate system for rotation
-  println(angle);
   rotate(angle);
-  shape(rocket, -30, -30, 60,60); //position shape with center at 0,0 to rotate around itself
+  fill(200,200,0);
+  shape(rocket, -50, -50, 100,100); //position shape with center at 0,0 to rotate around itself
+  fill(255,0,0,alpha);
+  shape(rocket, -50, -50, 100,100); //position shape with center at 0,0 to rotate around itself
 }
 
 void mousePressed(){
