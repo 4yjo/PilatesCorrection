@@ -13,7 +13,7 @@ int time1 = 2000;
 int time2 = 4000;
 int time3 = 6000;
 PShape rocket;
-
+PShape boom;
 
 void setup(){
   //fullScreen();
@@ -23,8 +23,10 @@ void setup(){
   //set Window Title
   surface.setTitle("Pilates Correction!");
   surface.setResizable(true);
-  rocket = loadShape("rocket.svg");
+  rocket = loadShape("rocket.svg"); //make sure graphics are in same folder as this file
   rocket.disableStyle();
+  
+  boom = loadShape("boom.svg"); //maybe choose other file as "filters are not supported"
   
   incoming = "";
   
@@ -73,6 +75,9 @@ void draw(){
   if (! Float.isNaN(yValue)){
     angle= map(yValue, -3, 3, -HALF_PI, HALF_PI); // circle = 2*PI, half circle = 1*PI 
     alpha = map(abs(yValue), 0,3, 50,150);
+    if ((yValue < -3.1) || (yValue > 3.1)){
+      gameOver();
+  }
   }
   //draw rocket
   translate(width/2, height-100); //shift coordinate system for rotation
@@ -81,10 +86,6 @@ void draw(){
   shape(rocket, -50, -50, 100,100); //position shape with center at 0,0 to rotate around itself
   fill(255,0,0,alpha);
   shape(rocket, -50, -50, 100,100); //position shape with center at 0,0 to rotate around itself
-}
-
-void mousePressed(){
-  //myServer.write("HELLO!");
 }
 
 void setScore(){
@@ -103,4 +104,9 @@ void countdown(){
   else if(millis() > time2 && millis()  < time3){
     text("1", width/2, height/2);
   }
+}
+  
+void gameOver(){
+  shape(boom, width/2-150, height-160, 300, 200);
+  noLoop(); 
 }
