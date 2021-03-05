@@ -8,11 +8,10 @@ float xValue;
 float yValue;
 float angle = 0;
 float alpha = 100;
-int score; 
+float score; 
 int time1 = 2000;
 int time2 = 4000;
 int time3 = 6000;
-int timeRefresh = 0;
 boolean looping = false;
 boolean crashing;
 PShape rocket;
@@ -58,15 +57,9 @@ void draw(){
       // set crashing
       crashing = true;
       //display score in upper left corner
-      text("score: "+ score, 50, 10);
+      text("score: "+ int(score), 50, 10);
     }
-      
-    
-    //display xValues or y Values for easier evaluation
-    // text(yValue*100, width-20, height-20);
-  
-  
-  setScore();
+
   
   Client myClient = myServer.available();
   if(myClient != null){
@@ -78,6 +71,20 @@ void draw(){
     yValue = float(coord[1]);
   }
     
+  
+  // visualize negative points for hollow back
+  if (xValue > 3){
+    fill (255,0,0);
+   // rect (width/2-60, height-170, 15, 5);
+   // rect (width/2-40, height-165, 15, 5);
+    text("hollow back!", width/2-100, height- 200);
+  }
+  else if (xValue <=3){
+    // rise score if backposition is stable
+    score += 0.015; //equals approx 1 whole point per second as 60 fps
+  }
+  
+  
   //calc angle for rotation
   // check for NaN first, to omit blinking of the rocket
   if (! Float.isNaN(yValue)){
@@ -96,13 +103,9 @@ void draw(){
   shape(rocket, -50, -50, 100,100); //position shape with center at 0,0 to rotate around itself
 }
 
-void setScore(){
-  //calculate Score from time - hollow back
-  score = - timeRefresh + int(millis()*0.001)-int(xValue); // -6 for countdown time
-}
 
 void countdown(){
-   if (!looping){
+  if (!looping){
     fill(255);
     text("connect your phone & hit space to start the fun", width/2, height/2);
     noLoop();
@@ -119,24 +122,12 @@ void countdown(){
   }
 }
  
-void mousePressed(){
-
-  if (dist(mouseX, mouseY, width/2, height/2)<=100){
-    time1 += millis();
-    time2 += millis();
-    time3 += millis();
-    timeRefresh = int(millis()*0.001)-6; // 6 for countdown
-    looping = true;
-    loop();
-  }
-}
 
 void keyPressed(){
     println ("keypressed");
     time1 += millis();
     time2 += millis();
     time3 += millis();
-    timeRefresh = int(millis()*0.001)+6; // 6 for countdown
     looping = true;
     loop();
 }
@@ -144,16 +135,8 @@ void keyPressed(){
   
 void gameOver(){
   if(crashing){
-  shape(boom, width/2-150, height-160, 300, 200);
-  //create start again button
-  fill(255);
-  text("GAME OVER!", width/2, height/2-40);
-  fill(200,0,0);
-  rect(width/2-60,height/2, 120, 30);
-  fill(255);
-  text("Play again", width/2, height/2+10);
+  shape(boom, width/2-150, height-160, 300, 200); 
   looping = false;
   noLoop(); 
   }
-  // more on starting again: http://processing.flosscience.com/processing-for-android/macul-2012/simple-game-code
 }
