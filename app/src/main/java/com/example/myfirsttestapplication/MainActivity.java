@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public static boolean sendingData; //value to check if user wants to set data. set true in startSendingData()
 
-    public static String mServerIP = "192.168.0.200."; // defaults to IP Address of Laptop that runs server.pde
+    public static String mServerIP = "127.0.0.1"; // set ip for your computer here, this is just a place holder
                                                         // may be changed by user in settings of the app
      public static int PORT = 12345;
 
