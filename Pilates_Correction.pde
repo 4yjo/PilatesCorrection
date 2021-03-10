@@ -58,20 +58,25 @@ void draw(){
       crashing = true;
       //display score in upper left corner
       text("score: "+ int(score), 50, 10);
-    }
     
-  //  if (millis()%2 ==0){
-      //lift left arm
-      fill(200,0,200, 150);
-      circle(100,150,100);
-      fill(255,150);
-      text("left arm", 100,150);
-
-
-      fill(200,0,200, 150);
-      circle(width-100,150,100);
-      fill(255,150);
-      text("right arm", width-100,150);
+      if (second()%10==0){
+      //give instructions every 10 seconds
+        if (second()%20==0){
+        //lift left arm
+        fill(200,0,200, 150);
+        circle(100,150,100);
+        fill(255,150);
+        text("left arm", 100,150);
+        }
+  
+        else {
+        fill(200,0,200, 150);
+        circle(width-100,150,100);
+        fill(255,150);
+        text("right arm", width-100,150);
+        }
+    }
+    }
   
   Client myClient = myServer.available();
   if(myClient != null){
