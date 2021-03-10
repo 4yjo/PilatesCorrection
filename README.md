@@ -10,9 +10,9 @@ You need an android phone and a computer. On your computer you need to download 
 
 Now download the following two files: 
 Pilates_Correction.pde
-releaseApp.apk
+app-release.apk
 
-connect your phone to your computer and drag the downloaded file releaseApp.apk on your android phone. Now it should be in your Apps.
+connect your phone to your computer and drag the downloaded file app-release.apk on your android phone. Now it should be in your Apps.
 Try to open it. If that worked well, you have to set the right server information. Click the menu button to go to settings. Here you need to enter your computer's ip adress.
 
 Now run the processing file. Open Pilates_Correction.pde in Processing. Click the play button to run the game. A new window should open displaying a rocket.
