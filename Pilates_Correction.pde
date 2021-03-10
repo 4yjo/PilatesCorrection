@@ -59,7 +59,19 @@ void draw(){
       //display score in upper left corner
       text("score: "+ int(score), 50, 10);
     }
+    
+  //  if (millis()%2 ==0){
+      //lift left arm
+      fill(200,0,200, 150);
+      circle(100,150,100);
+      fill(255,150);
+      text("left arm", 100,150);
 
+
+      fill(200,0,200, 150);
+      circle(width-100,150,100);
+      fill(255,150);
+      text("right arm", width-100,150);
   
   Client myClient = myServer.available();
   if(myClient != null){
@@ -73,13 +85,12 @@ void draw(){
     
   
   // visualize negative points for hollow back
-  if (xValue > 3){
+  if (xValue > 1.5){
     fill (255,0,0);
-   // rect (width/2-60, height-170, 15, 5);
-   // rect (width/2-40, height-165, 15, 5);
-    text("hollow back!", width/2-100, height- 200);
+    //display text to warn about hollow or round back
+    text("straighten your back!", width/2-100, height- 200);
   }
-  else if (xValue <=3){
+  else if (xValue <= 1.5){
     // rise score if backposition is stable
     score += 0.015; //equals approx 1 whole point per second as 60 fps
   }
@@ -136,6 +147,9 @@ void keyPressed(){
 void gameOver(){
   if(crashing){
   shape(boom, width/2-150, height-160, 300, 200); 
+  fill(255);
+  text("score: "+ int(score), width/2, height/2-20);
+  text("GAME OVER!", width/2, height/2-40);
   looping = false;
   noLoop(); 
   }
