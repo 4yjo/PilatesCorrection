@@ -89,7 +89,6 @@ void draw(){
   }
     
   
-  // visualize negative points for hollow back
   if (xValue > 1.5){
     fill (255,0,0);
     //display text to warn about hollow or round back
