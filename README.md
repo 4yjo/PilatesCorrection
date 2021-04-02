@@ -6,7 +6,7 @@ this app aims to analyse correct movement in pilates exercises by collecting sen
 
 ## how to play the game?
 
-You need an android phone and a computer. On your computer you need to download processing from https://processing.org/download/.
+You need an android phone and a computer. On your computer you need to download Processing from https://processing.org/download/.
 
 Now download the following two files: 
 Pilates_Correction.pde
@@ -19,10 +19,6 @@ Now run the processing file. Open Pilates_Correction.pde in Processing. Click th
 Hit Let's go! on your smartphone (if it is running already, hit pause & Let's go). Now the rocket should move according to your smartphone movement :)
 Install the smartphone on your lower back (some tape might be helpful) and hit space on your computer to start the game. Enjoy!
 
-## how to modify the app or the game?
-..
+## invitation to modify the app or the game
 
-helpful tutorials & further info:
-
-displaying accelerometer data based on android tutorial https://developer.android.com/codelabs/advanced-android-training-sensor-data#3
-other resources: ...
+Feel free to use this project and adapt it to your needs. I'm always happy to answer questions or hear about your ideas and modifications.
